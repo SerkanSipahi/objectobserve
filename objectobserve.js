@@ -2,6 +2,8 @@
 
 var ObjectObserve = (function(){
 
+    'use strict';
+
     var toString = Object.prototype.toString,
         is = function(type, obj){
             return ( toString.call(obj).toLowerCase() === '[object '+type+']' );
@@ -18,8 +20,6 @@ var ObjectObserve = (function(){
             argsLength     = args.length,
             callback       = void(0),
             object         = args.slice(0,1)[0],
-            attr           = 0,
-            attrLength     = 0,
             lastArg        = args.slice(argsLength-1, argsLength)[0],
             props          = args.slice(1, argsLength-1),
             propLength     = 0,
@@ -39,47 +39,40 @@ var ObjectObserve = (function(){
         propLength = props.length;
         for(i=0; i<propLength;i++){
 
-            attr = props[i].split('.');
-            attrLength = attr.length;
+            var tmpFunction = this._createObjectByString(props[i]),
+                context     = this._createObjectByString(props[i]);
 
-            if(attrLength === 1){
+            this._addObjectByString(tmpFunction, props[i], function(arg){
 
-                // > hier übergebene attribute chain auflösen!
-                var tmpFunction      = {},
-                    context          = {};
-                    context[attr[0]] = {};
+                var attr = Object.keys(this)[0];
 
-                // > hier übergebene attribute chain auflösen!
-                tmpFunction[attr[0]] = function(arg){
-
-                    var attr = Object.keys(this)[0];
-
-                    /*
-                     * Wert in das echte Objekt schreiben bzw. aufrufen!
-                     * */
-                    object[attr] = arg;
-
-                    /*
-                     * @callback
-                     * die CallbackFunktion die über den konstructor übergeben wird
-                     * immer aufrufen wenn eine Methode/Attribute über konstructor
-                     * registriert wurde!
-                     */
-                    if(is(callback) !== 'undefined'){
-                        callback.call(object, arg);
-                    }
-
-                    /*
-                     * @attr on[Methode] aufrufen
-                     **/
-                    self.callbacks['on'+capitalize(attr)].call(object, arg);
+                /*
+                 * todo: mit this._addObjectByString in object schreiben!
+                 * Wert in das echte Objekt schreiben bzw. aufrufen!
+                 * */
+                object[attr] = arg;
 
 
-                }.bind(context);
+                /*
+                 * @callback
+                 * die CallbackFunktion die über den konstructor übergeben wird
+                 * immer aufrufen wenn eine Methode/Attribute über konstructor
+                 * registriert wurde!
+                 */
+                if(is(callback) !== 'undefined'){
+                    callback.call(object, arg);
+                }
 
-                this.tmpStore.push(tmpFunction);
+                /*
+                 * @attr on[Methode] aufrufen
+                 **/
+                self.callbacks['on'+capitalize(attr)].call(object, arg);
 
-            }
+
+            }.bind(context));
+
+            this.tmpStore.push(tmpFunction);
+
         }
 
         for(var index in this.tmpStore){
@@ -88,11 +81,15 @@ var ObjectObserve = (function(){
                 if(!this.tmpStore[index].hasOwnProperty(func)){ continue; }
 
                 // > hier übergebene attribute chain auflösen!
+                // 1.) func = 'foo.boo.loo' übergeben!
+                // 2.) func in object auflösen mit this._createObjectByString();
+                // 3.) aufgelöstes object an constructor.prototpye anhängen.
+                // 4.) mit this._addObjectByString, this.tmpStore[index][func]
+                //     an constructor.prototype[func] anhängen
+
                 constructor.prototype[func] = this.tmpStore[index][func];
 
-                // > hier übergebene attribute chain auflösen!
-                var tmpContext = {};
-                    tmpContext[func] = {};
+                var tmpContext = this._createObjectByString(func);
 
                 constructor.prototype['on'+capitalize(func)] = function(callback){
                     var attr = Object.keys(this)[0];
@@ -129,7 +126,7 @@ var ObjectObserve = (function(){
             return tmpObj;
         },
 
-        _setValueByString : function(object, path, value){
+        _addObjectByString : function(object, path, value){
 
             var i = 0,
                 path = path.split('.');
@@ -142,6 +139,9 @@ var ObjectObserve = (function(){
             }
 
             return object;
+        },
+        _flatObject : function(object){
+
         }
     };
 
@@ -158,7 +158,7 @@ window.onload = function(){
     });
 
     $proxyObj.onId(function(arg){
-        console.log('onId_callback', arg);
+        console.log('onId_callback', arg, this);
     });
     $proxyObj.onInnerHTML(function(arg){
         console.log('onInnerHTML_callback', arg, this);
