@@ -39,19 +39,15 @@ var ObjectObserve = (function(){
         propLength = props.length;
         for(i=0; i<propLength;i++){
 
-            var tmpFunction = this._createObjectByString(props[i]),
-                context     = this._createObjectByString(props[i]);
+            var context = {};
+                context.notation = props[i];
 
-            this._addObjectByString(tmpFunction, props[i], function(arg){
-
-                var attr = Object.keys(this)[0];
+            this._addObjectByString(constructor.prototype, props[i], function(arg){
 
                 /*
-                 * todo: mit this._addObjectByString in object schreiben!
                  * Wert in das echte Objekt schreiben bzw. aufrufen!
                  * */
-                object[attr] = arg;
-
+                self._addObjectByString(object, this.notation, arg);
 
                 /*
                  * @callback
@@ -59,90 +55,73 @@ var ObjectObserve = (function(){
                  * immer aufrufen wenn eine Methode/Attribute über konstructor
                  * registriert wurde!
                  */
-                if(is(callback) !== 'undefined'){
+                if(!is('undefined', callback)){
                     callback.call(object, arg);
                 }
 
                 /*
                  * @attr on[Methode] aufrufen
                  **/
-                self.callbacks['on'+capitalize(attr)].call(object, arg);
+                self.callbacks['on'+self._arrayToCamelCase(this.notation.split('.'))].call(object, arg);
 
 
             }.bind(context));
 
-            this.tmpStore.push(tmpFunction);
+            var onMethod = 'on'+self._arrayToCamelCase(context.notation.split('.'));
+            this._addObjectByString(constructor.prototype, onMethod, function(callback){
 
-        }
+                self.callbacks['on'+self._arrayToCamelCase(this.notation.split('.'))] = callback;
 
-        for(var index in this.tmpStore){
-            if(!this.tmpStore.hasOwnProperty(index)){ continue; }
-            for(var func in this.tmpStore[index]){
-                if(!this.tmpStore[index].hasOwnProperty(func)){ continue; }
+            }.bind(context));
 
-                // > hier übergebene attribute chain auflösen!
-                // 1.) func = 'foo.boo.loo' übergeben!
-                // 2.) func in object auflösen mit this._createObjectByString();
-                // 3.) aufgelöstes object an constructor.prototpye anhängen.
-                // 4.) mit this._addObjectByString, this.tmpStore[index][func]
-                //     an constructor.prototype[func] anhängen
-
-                constructor.prototype[func] = this.tmpStore[index][func];
-
-                var tmpContext = this._createObjectByString(func);
-
-                constructor.prototype['on'+capitalize(func)] = function(callback){
-                    var attr = Object.keys(this)[0];
-                    self.callbacks['on'+capitalize(attr)] = callback;
-                }.bind(tmpContext);
-
-            }
         }
 
     }
 
-    Observe.prototype = {
+    Observe.prototype._createObjectByString = function(namespace){
 
-        _createObjectByString : function(namespace){
+        var tmpObj = {},
+            ns = window,
+            parts = null,
+            first = namespace.split('.')[0];
 
-            var tmpObj = {},
-                ns = window,
-                parts = null,
-                first = namespace.split('.')[0];
-
-            if (namespace != '') {
-                parts = namespace.split('.');
-                for (var i = 0, j = parts.length; i < j; i++) {
-                    if (!ns[parts[i]]) {
-                        ns[parts[i]] = {};
-                    }
-                    ns = ns[parts[i]];
+        if (namespace != '') {
+            parts = namespace.split('.');
+            for (var i = 0, j = parts.length; i < j; i++) {
+                if (!ns[parts[i]]) {
+                    ns[parts[i]] = {};
                 }
+                ns = ns[parts[i]];
             }
-
-            tmpObj[first] = window[first];
-            delete window[first];
-
-            return tmpObj;
-        },
-
-        _addObjectByString : function(object, path, value){
-
-            var i = 0,
-                path = path.split('.');
-
-            for (; i < path.length; i++){
-                if (value !== void(0) && i + 1 === path.length){
-                    object[path[i]] = value;
-                }
-                object = object[path[i]];
-            }
-
-            return object;
-        },
-        _flatObject : function(object){
-
         }
+
+        tmpObj[first] = window[first];
+        delete window[first];
+
+        return tmpObj;
+    };
+
+    Observe.prototype._addObjectByString = function(object, path, value){
+
+        var i = 0,
+            path = path.split('.');
+
+        for (; i < path.length; i++){
+            if (value !== void(0) && i + 1 === path.length){
+                object[path[i]] = value;
+            }
+            object = object[path[i]];
+        }
+
+        return object;
+    };
+
+    Observe.prototype._arrayToCamelCase = function(array){
+        var tmpString = '';
+        for(var i=0;i<array.length;i++){
+            tmpString += capitalize(array[i]);
+        }
+        return tmpString;
     };
 
     return Observe;
@@ -153,9 +132,7 @@ window.onload = function(){
 
     var $ = document.querySelectorAll.bind(document);
 
-    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id', function(arg){
-        console.log('constructor', arg, this);
-    });
+    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id');
 
     $proxyObj.onId(function(arg){
         console.log('onId_callback', arg, this);
@@ -167,7 +144,7 @@ window.onload = function(){
     $proxyObj.id('setter:im-id');
     $proxyObj.innerHTML('setter:Hello innerHTML :)');
 
-    //console.log($proxyObj);
+    console.log($proxyObj);
 
 
 };
