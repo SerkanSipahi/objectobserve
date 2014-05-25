@@ -39,9 +39,6 @@ var ObjectObserve = (function(){
         propLength = props.length;
         for(i=0; i<propLength;i++){
 
-            var test_tmpFunction = this._createObjectByString(props[i]);
-            console.log(test_tmpFunction);
-
             attr = props[i].split('.');
             attrLength = attr.length;
 
@@ -170,7 +167,7 @@ window.onload = function(){
     $proxyObj.id('setter:im-id');
     $proxyObj.innerHTML('setter:Hello innerHTML :)');
 
-    console.log($proxyObj);
+    //console.log($proxyObj);
 
 
 };
