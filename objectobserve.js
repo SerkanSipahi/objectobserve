@@ -26,7 +26,6 @@ var ObjectObserve = (function(){
             i              = 0,
             f              = 0;
 
-            this.tmpStore  = [];
             this.callbacks = {};
 
         if(is('function', lastArg)){ callback = lastArg; }
@@ -132,7 +131,9 @@ window.onload = function(){
 
     var $ = document.querySelectorAll.bind(document);
 
-    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id');
+    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id', function(arg){
+        console.log('constructor', arg, this);
+    });
 
     $proxyObj.onId(function(arg){
         console.log('onId_callback', arg, this);
