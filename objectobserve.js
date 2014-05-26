@@ -14,7 +14,7 @@ var ObjectObserve = (function(undefined, window){
         },
         addObjectByString = function(object, path, key, value){
 
-            var i = 0,
+            var i = 0, objectReferenceState = object,
                 path = path.split('.');
 
             for (; i < path.length; i++){
@@ -23,6 +23,7 @@ var ObjectObserve = (function(undefined, window){
                 }
                 object = object[path[i]];
             }
+            object = objectReferenceState;
 
             return object;
         },
