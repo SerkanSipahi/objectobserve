@@ -86,8 +86,22 @@ var ObjectObserve = (function(){
         propLength = props.length;
         for(i=0; i<propLength;i++){
 
-            var context = {};
+            var context = {},
+                propsAsArray = props[i].split('.'),
+                lastProp = null;
                 context.notation = props[i];
+
+            if(propsAsArray.length > 1){
+
+                var constructorPrototype = constructor.prototype;
+                for(var attr in propsAsArray){
+                    if(!propsAsArray.hasOwnProperty(attr)){ continue; }
+                    constructor.prototype[propsAsArray[attr]] = {};
+                    constructor.prototype = constructor.prototype[propsAsArray[attr]];
+                }
+
+                constructor.prototype = constructorPrototype;
+            }
 
             // > todo: dokumentieren
             addObjectByString(constructor.prototype, props[i], function(arg){
@@ -110,7 +124,9 @@ var ObjectObserve = (function(){
                 /*
                  * @attr on[Methode] aufrufen
                  **/
-                callbacks['on'+arrayToCamelCase(this.notation.split('.'))].call(object, arg);
+                if(callbacks['on'+arrayToCamelCase(this.notation.split('.'))]!==void(0)){
+                    callbacks['on'+arrayToCamelCase(this.notation.split('.'))].call(object, arg);
+                }
 
             }.bind(context));
 
@@ -132,7 +148,7 @@ window.onload = function(){
 
     var $ = document.querySelectorAll.bind(document);
 
-    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id', function(arg){
+    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id', 'style.width', function(arg){
         console.log('constructor', arg, this);
     });
 
@@ -142,7 +158,11 @@ window.onload = function(){
     $proxyObj.onInnerHTML(function(arg){
         console.log('onInnerHTML_callback', arg, this);
     });
+    $proxyObj.onStyleWidth(function(arg){
+        console.log('onStyleWidth_callback', arg, this);
+    });
 
+    $proxyObj.style.width('300px');
     $proxyObj.id('setter:im-id');
     $proxyObj.innerHTML('setter:Hello innerHTML :)');
 
