@@ -4,13 +4,58 @@ var ObjectObserve = (function(){
 
     'use strict';
 
+    // > Helper Functions
     var toString = Object.prototype.toString,
         is = function(type, obj){
             return ( toString.call(obj).toLowerCase() === '[object '+type+']' );
         },
         capitalize = function(s){
             return s[0].toUpperCase() + s.slice(1);
-    };
+        },
+        addObjectByString = function(object, path, value){
+
+            var i = 0,
+                path = path.split('.');
+
+            for (; i < path.length; i++){
+                if (value !== void(0) && i + 1 === path.length){
+                    object[path[i]] = value;
+                }
+                object = object[path[i]];
+            }
+
+            return object;
+        },
+        arrayToCamelCase = function(array){
+
+            var tmpString = '';
+            for(var i=0;i<array.length;i++){
+                tmpString += capitalize(array[i]);
+            }
+            return tmpString;
+        },
+        createObjectByString = function(namespace){
+
+            var tmpObj = {},
+                ns = window,
+                parts = null,
+                first = namespace.split('.')[0];
+
+            if (namespace != '') {
+                parts = namespace.split('.');
+                for (var i = 0, j = parts.length; i < j; i++) {
+                    if (!ns[parts[i]]) {
+                        ns[parts[i]] = {};
+                    }
+                    ns = ns[parts[i]];
+                }
+            }
+
+            tmpObj[first] = window[first];
+            delete window[first];
+
+            return tmpObj;
+        };
 
     function Observe(){
 
@@ -24,12 +69,15 @@ var ObjectObserve = (function(){
             props          = args.slice(1, argsLength-1),
             propLength     = 0,
             i              = 0,
-            f              = 0;
+            f              = 0,
+            callbacks      = {};
 
-            this.callbacks = {};
+        is('function', lastArg) ? callback = lastArg : props = args.slice(1, argsLength);
 
-        if(is('function', lastArg)){ callback = lastArg; }
-        else { props = args.slice(1, argsLength); }
+        // > Öffentliche Props ( dient nur zur Information )
+        this.props = props;
+        this.observeObject = object;
+        this.constructorCallback = [ callback ];
 
         /*
          * @props
@@ -41,12 +89,13 @@ var ObjectObserve = (function(){
             var context = {};
                 context.notation = props[i];
 
-            this._addObjectByString(constructor.prototype, props[i], function(arg){
+            // > todo: dokumentieren
+            addObjectByString(constructor.prototype, props[i], function(arg){
 
                 /*
                  * Wert in das echte Objekt schreiben bzw. aufrufen!
                  * */
-                self._addObjectByString(object, this.notation, arg);
+                addObjectByString(object, this.notation, arg);
 
                 /*
                  * @callback
@@ -61,67 +110,19 @@ var ObjectObserve = (function(){
                 /*
                  * @attr on[Methode] aufrufen
                  **/
-                self.callbacks['on'+self._arrayToCamelCase(this.notation.split('.'))].call(object, arg);
-
-
-            }.bind(context));
-
-            var onMethod = 'on'+self._arrayToCamelCase(context.notation.split('.'));
-            this._addObjectByString(constructor.prototype, onMethod, function(callback){
-
-                self.callbacks['on'+self._arrayToCamelCase(this.notation.split('.'))] = callback;
+                callbacks['on'+arrayToCamelCase(this.notation.split('.'))].call(object, arg);
 
             }.bind(context));
 
+            // > todo: dokumentieren
+            var onMethod = 'on'+arrayToCamelCase(context.notation.split('.'));
+            addObjectByString(constructor.prototype, onMethod, function(callback){
+
+                callbacks['on'+arrayToCamelCase(this.notation.split('.'))] = callback;
+
+            }.bind(context));
         }
-
     }
-
-    Observe.prototype._createObjectByString = function(namespace){
-
-        var tmpObj = {},
-            ns = window,
-            parts = null,
-            first = namespace.split('.')[0];
-
-        if (namespace != '') {
-            parts = namespace.split('.');
-            for (var i = 0, j = parts.length; i < j; i++) {
-                if (!ns[parts[i]]) {
-                    ns[parts[i]] = {};
-                }
-                ns = ns[parts[i]];
-            }
-        }
-
-        tmpObj[first] = window[first];
-        delete window[first];
-
-        return tmpObj;
-    };
-
-    Observe.prototype._addObjectByString = function(object, path, value){
-
-        var i = 0,
-            path = path.split('.');
-
-        for (; i < path.length; i++){
-            if (value !== void(0) && i + 1 === path.length){
-                object[path[i]] = value;
-            }
-            object = object[path[i]];
-        }
-
-        return object;
-    };
-
-    Observe.prototype._arrayToCamelCase = function(array){
-        var tmpString = '';
-        for(var i=0;i<array.length;i++){
-            tmpString += capitalize(array[i]);
-        }
-        return tmpString;
-    };
 
     return Observe;
 
