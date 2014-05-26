@@ -20,7 +20,7 @@ var $observedObject = new ObjectObserve(
     'style.width',
     'style.height',
     'setAttribute()',
-    // > global callback
+    // > global callback - optional
     function(arg){
         console.log('constructor', arg, this);
 });
