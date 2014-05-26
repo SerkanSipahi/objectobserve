@@ -1,4 +1,11 @@
-#### ObjectObserve.js
+#### ObjectObserve.js ( ECMAscript 5 )
+
+##### Works well with:
+    * Chrome
+    * Firefox
+    * Safari
+    * Opera
+    * Internet-Explorer +9
 
 ````js
     var $ = document.querySelectorAll.bind(document);
