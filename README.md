@@ -10,8 +10,7 @@
 ````js
 var $ = document.querySelectorAll.bind(document);
 
-// > init observer
-var $proxyObj = new ObjectObserve(
+var $observedObject = new ObjectObserve(
     // > observed object
     $('.header')[0],
     // > observed attributes/methods
@@ -27,32 +26,34 @@ var $proxyObj = new ObjectObserve(
 });
 
 // > register callbacks
-$proxyObj.onId(function(arg){
+$observedObject.onId(function(arg){
     console.log('onId_callback', arg, this);
 });
-$proxyObj.onInnerHTML(function(arg){
+$observedObject.onInnerHTML(function(arg){
     console.log('onInnerHTML_callback', arg, this);
 });
-$proxyObj.onStyleWidth(function(arg){
+$observedObject.onStyleWidth(function(arg){
     console.log('onStyleWidth_callback', arg, this);
 });
-$proxyObj.onStyleHeight(function(arg){
+$observedObject.onStyleHeight(function(arg){
     console.log('onStyleHeight_callback', arg, this);
 });
-$proxyObj.onStyleBackgroundColor(function(arg){
+$observedObject.onStyleBackgroundColor(function(arg){
     console.log('onStyleBackgroundColor', arg, this);
 });
-$proxyObj.onSetAttribute(function(arg){
+/*
+$observedObject.onSetAttribute(function(arg){
     console.log('onSetAttribute', arg, this);
 });
+*/
 
 // > set or get to trigger the registered callbacks
-$proxyObj.style.backgroundColor('red');
-$proxyObj.style.height('100px');
-$proxyObj.style.width('300px');
-$proxyObj.id('setter:im-id');
-$proxyObj.innerHTML('setter:Hello innerHTML :)');
-$proxyObj.setAttribute('data-foo', 'nice');
+$observedObject.style.backgroundColor('red');
+$observedObject.style.height('100px');
+$observedObject.style.width('300px');
+$observedObject.id('setter:im-id');
+$observedObject.innerHTML('setter:Hello innerHTML :)');
+//$observedObject.setAttribute('data-foo', 'nice');
 
 console.log($proxyObj);
 ````
