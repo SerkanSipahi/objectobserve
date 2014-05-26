@@ -1,4 +1,10 @@
-#### ObjectObserve.js ( ECMAscript 5 )
+#### ObjectObserve.js ( ECMAscript 5 ) - observe whatever you want
+    * Objects
+    * domNodes
+    * Third Party Librariess e.g jQuery, Zepto, etc
+    * Methods
+    * Attributes
+    * whatever you want :)
 
 ##### Works well with:
     * Chrome
