@@ -1,6 +1,6 @@
 #### ObjectObserve.js ( ECMAscript 5 ) - observe whatever you want
     * Objects
-    * domNodes
+    * domNode, native domMethods
     * Third Party Librariess e.g jQuery, Zepto, etc
     * Methods
     * Attributes

@@ -76,9 +76,9 @@ var ObjectObserve = (function(undefined, window){
         is('function', lastArg) ? callback = lastArg : props = args.slice(1, argsLength);
 
         // > Öffentliche Props ( dient nur zur Information )
-        this.props = props;
-        this.observeObject = object;
-        this.constructorCallback = [ callback ];
+        this.observed_properties = props;
+        this.observed_object = object;
+        this.global_callback = [ callback ];
 
         /*
          * @props
