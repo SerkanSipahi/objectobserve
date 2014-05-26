@@ -4,13 +4,17 @@
     var $ = document.querySelectorAll.bind(document);
 
     // > init observer
-    var $proxyObj = new ObjectObserve($('.header')[0],
+    var $proxyObj = new ObjectObserve(
+        // > observed object
+        $('.header')[0],
+        // > observed attributes/methods
         'innerHTML',
         'id',
         'style.backgroundColor',
         'style.width',
         'style.height',
         'setAttribute()',
+        // > global callback
         function(arg){
             console.log('constructor', arg, this);
     });
