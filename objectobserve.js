@@ -96,7 +96,9 @@ var ObjectObserve = (function(){
                 var constructorPrototype = constructor.prototype;
                 for(var attr in propsAsArray){
                     if(!propsAsArray.hasOwnProperty(attr)){ continue; }
-                    constructor.prototype[propsAsArray[attr]] = {};
+                    if(constructor.prototype[propsAsArray[attr]]===void(0)){
+                        constructor.prototype[propsAsArray[attr]] = {};
+                    }
                     constructor.prototype = constructor.prototype[propsAsArray[attr]];
                 }
 
@@ -148,7 +150,7 @@ window.onload = function(){
 
     var $ = document.querySelectorAll.bind(document);
 
-    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id', 'style.width', function(arg){
+    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id', 'style.backgroundColor', 'style.width', function(arg){
         console.log('constructor', arg, this);
     });
 
@@ -161,7 +163,11 @@ window.onload = function(){
     $proxyObj.onStyleWidth(function(arg){
         console.log('onStyleWidth_callback', arg, this);
     });
+    $proxyObj.onStyleBackgroundColor(function(arg){
+        console.log('onStyleBackgroundColor', arg, this);
+    });
 
+    $proxyObj.style.backgroundColor('red');
     $proxyObj.style.width('300px');
     $proxyObj.id('setter:im-id');
     $proxyObj.innerHTML('setter:Hello innerHTML :)');
