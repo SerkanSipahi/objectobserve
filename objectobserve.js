@@ -12,14 +12,14 @@ var ObjectObserve = (function(){
         capitalize = function(s){
             return s[0].toUpperCase() + s.slice(1);
         },
-        addObjectByString = function(object, path, value){
+        addObjectByString = function(object, path, key, value){
 
             var i = 0,
                 path = path.split('.');
 
             for (; i < path.length; i++){
-                if (value !== void(0) && i + 1 === path.length){
-                    object[path[i]] = value;
+                if (key !== void(0) && i + 1 === path.length){
+                    object[path[i]] = key;
                 }
                 object = object[path[i]];
             }
@@ -152,10 +152,19 @@ window.onload = function(){
 
     var $ = document.querySelectorAll.bind(document);
 
-    var $proxyObj = new ObjectObserve($('.header')[0], 'innerHTML', 'id', 'style.backgroundColor', 'style.width', function(arg){
-        console.log('constructor', arg, this);
+    // > init observer
+    var $proxyObj = new ObjectObserve($('.header')[0],
+        'innerHTML',
+        'id',
+        'style.backgroundColor',
+        'style.width',
+        'style.height',
+        'setAttribute()',
+        function(arg){
+            console.log('constructor', arg, this);
     });
 
+    // > register callbacks
     $proxyObj.onId(function(arg){
         console.log('onId_callback', arg, this);
     });
@@ -165,39 +174,35 @@ window.onload = function(){
     $proxyObj.onStyleWidth(function(arg){
         console.log('onStyleWidth_callback', arg, this);
     });
+    $proxyObj.onStyleHeight(function(arg){
+        console.log('onStyleHeight_callback', arg, this);
+    });
     $proxyObj.onStyleBackgroundColor(function(arg){
         console.log('onStyleBackgroundColor', arg, this);
     });
+    $proxyObj.onSetAttribute(function(arg){
+        console.log('onSetAttribute', arg, this);
+    });
 
+    // > set or get to trigger the registered callbacks
     $proxyObj.style.backgroundColor('red');
+    $proxyObj.style.height('100px');
     $proxyObj.style.width('300px');
     $proxyObj.id('setter:im-id');
     $proxyObj.innerHTML('setter:Hello innerHTML :)');
+    $proxyObj.setAttribute('data-foo', 'nice');
 
     console.log($proxyObj);
 
 
 };
-
 /*
- $proxydomNode.style.width();
- $proxydomNode.style.height();
- $proxydomNode.setAttribute('data-foo', true);
+$proxydomNode.onSetAttribute({
+    before : function(e){
 
- $proxydomNode.onStyleWidth(function(changes){
+    },
+    after : function(e){
 
- });
-
- $proxydomNode.onSetAttribute(function(changes){
-
- });
-
- $proxydomNode.onSetAttribute({
-     before : function(e){
-
-     },
-     after : function(e){
-
-     }
- });
- */
+    }
+});
+*/
