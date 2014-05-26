@@ -93,7 +93,7 @@ var ObjectObserve = (function(){
 
             if(propsAsArray.length > 1){
 
-                var constructorPrototype = constructor.prototype;
+                var constructorPrototypeReferenceState = constructor.prototype;
                 for(var attr in propsAsArray){
                     if(!propsAsArray.hasOwnProperty(attr)){ continue; }
                     if(constructor.prototype[propsAsArray[attr]]===void(0)){
@@ -101,8 +101,7 @@ var ObjectObserve = (function(){
                     }
                     constructor.prototype = constructor.prototype[propsAsArray[attr]];
                 }
-
-                constructor.prototype = constructorPrototype;
+                constructor.prototype = constructorPrototypeReferenceState;
             }
 
             // > todo: dokumentieren
@@ -111,7 +110,10 @@ var ObjectObserve = (function(){
                 /*
                  * Wert in das echte Objekt schreiben bzw. aufrufen!
                  * */
-                addObjectByString(object, this.notation, arg);
+                 // > setter
+                 if(arg!==void(0)){
+                     addObjectByString(object, this.notation, arg);
+                 }
 
                 /*
                  * @callback
