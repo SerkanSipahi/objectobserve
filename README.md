@@ -55,7 +55,7 @@ $observedObject.id('setter:im-id');
 $observedObject.innerHTML('setter:Hello innerHTML :)');
 //$observedObject.setAttribute('data-foo', 'nice');
 
-console.log($proxyObj);
+console.log($observedObject);
 ````
 
 #### instance
