@@ -23,7 +23,7 @@ var ObjectObserve = (function(undefined, window){
                 }
                 object = object[path[i]];
             }
-            object = objectReferenceState;
+            //object = objectReferenceState;
 
             return object;
         },
@@ -90,6 +90,7 @@ var ObjectObserve = (function(undefined, window){
             var context = {},
                 propsAsArray = props[i].split('.'),
                 lastProp = null;
+                context.hasMethod = /\((.*?)\)/.exec(props[i]) ? true : false;
                 context.notation = props[i];
 
             if(propsAsArray.length > 1){
@@ -114,6 +115,13 @@ var ObjectObserve = (function(undefined, window){
                  // > setter
                  if(arg!==undefined){
                      addObjectByString(object, this.notation, arg);
+                 } else if(arg===undefined){
+                     if(this.hasMethod){
+                         var lastIndexOf = this.notation.lastIndexOf(".");
+                         var firstpart = this.notation.slice(0, lastIndexOf);
+                         var secondpart = this.notation.slice(lastIndexOf+1);
+                         var tx = addObjectByString(object, firstpart);
+                     }
                  }
 
                 /*
@@ -186,6 +194,16 @@ window.onload = function(){
         console.log('onSetAttribute', arg, this);
     });
     */
+    /*
+    $observedObject.onSetAttribute({
+        before : function(e){
+
+        },
+        after : function(e){
+
+        }
+    });
+    */
 
     // > set or get to trigger the registered callbacks
     $observedObject.style.backgroundColor('red');
@@ -198,13 +216,3 @@ window.onload = function(){
     console.log($observedObject);
 
 };
-/*
- $observedObject.onSetAttribute({
-    before : function(e){
-
-    },
-    after : function(e){
-
-    }
-});
-*/
