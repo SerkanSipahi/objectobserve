@@ -122,14 +122,14 @@ var ObjectObserve = (function(undefined, window){
                  * registriert wurde!
                  */
                 if(!is('undefined', callback)){
-                    callback.call(object, arg);
+                    callback.apply(object, arguments);
                 }
 
                 /*
                  * @attr on[Methode] aufrufen
                  **/
                 if(callbacks['on'+arrayToCamelCase(this.notation.split('.'))]!==undefined){
-                    callbacks['on'+arrayToCamelCase(this.notation.split('.'))].call(object, arg);
+                    callbacks['on'+arrayToCamelCase(this.notation.split('.'))].apply(object, arguments);
                 }
 
             }.bind(context));
