@@ -1,6 +1,6 @@
 //======= domObserve ==========
 
-var ObjectObserve = (function(){
+var ObjectObserve = (function(undefined, window){
 
     'use strict';
 
@@ -18,7 +18,7 @@ var ObjectObserve = (function(){
                 path = path.split('.');
 
             for (; i < path.length; i++){
-                if (key !== void(0) && i + 1 === path.length){
+                if (key !== undefined && i + 1 === path.length){
                     object[path[i]] = key;
                 }
                 object = object[path[i]];
@@ -63,7 +63,7 @@ var ObjectObserve = (function(){
             constructor    = self.constructor,
             args           = Array.prototype.slice.call(arguments, 0),
             argsLength     = args.length,
-            callback       = void(0),
+            callback       = undefined,
             object         = args.slice(0,1)[0],
             lastArg        = args.slice(argsLength-1, argsLength)[0],
             props          = args.slice(1, argsLength-1),
@@ -96,7 +96,7 @@ var ObjectObserve = (function(){
                 var constructorPrototypeReferenceState = constructor.prototype;
                 for(var attr in propsAsArray){
                     if(!propsAsArray.hasOwnProperty(attr)){ continue; }
-                    if(constructor.prototype[propsAsArray[attr]]===void(0)){
+                    if(constructor.prototype[propsAsArray[attr]]===undefined){
                         constructor.prototype[propsAsArray[attr]] = {};
                     }
                     constructor.prototype = constructor.prototype[propsAsArray[attr]];
@@ -111,7 +111,7 @@ var ObjectObserve = (function(){
                  * Wert in das echte Objekt schreiben bzw. aufrufen!
                  * */
                  // > setter
-                 if(arg!==void(0)){
+                 if(arg!==undefined){
                      addObjectByString(object, this.notation, arg);
                  }
 
@@ -128,7 +128,7 @@ var ObjectObserve = (function(){
                 /*
                  * @attr on[Methode] aufrufen
                  **/
-                if(callbacks['on'+arrayToCamelCase(this.notation.split('.'))]!==void(0)){
+                if(callbacks['on'+arrayToCamelCase(this.notation.split('.'))]!==undefined){
                     callbacks['on'+arrayToCamelCase(this.notation.split('.'))].call(object, arg);
                 }
 
@@ -146,7 +146,7 @@ var ObjectObserve = (function(){
 
     return Observe;
 
-}());
+}(void(0), this));
 
 window.onload = function(){
 
