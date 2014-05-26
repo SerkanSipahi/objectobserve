@@ -58,3 +58,7 @@ $observedObject.innerHTML('setter:Hello innerHTML :)');
 console.log($proxyObj);
 ````
 
+#### instance
+
+![instance](https://github.com/SerkanSipahi/objectobserve/blob/master/instance.png)
+
