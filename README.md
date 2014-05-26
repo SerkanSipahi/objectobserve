@@ -60,5 +60,5 @@ console.log($proxyObj);
 
 #### instance
 
-![instance](https://github.com/SerkanSipahi/objectobserve/blob/master/instance.png)
+![instance](https://raw.githubusercontent.com/SerkanSipahi/objectobserve/master/instance.png)
 
