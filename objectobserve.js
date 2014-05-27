@@ -139,9 +139,7 @@ var ObjectObserve = (function(undefined, window){
                          if(baseClassName !== 'Function'){
 
                              DOMTokenList.prototype['@__'+secondpart] = function() {
-                                 console.log(arguments);
-                                 var args = arguments[0];
-                                 this[secondpart].apply(this, args);
+                                 this[secondpart].apply(this, arguments[0]);
                              };
                              baseClassInstance['@__'+secondpart](arguments);
 
