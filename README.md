@@ -16,7 +16,10 @@
 ````js
 var $ = document.querySelectorAll.bind(document);
 
-var $observedObject = new ObjectObserve($('.header')[0],
+var $observedObject = new ObjectObserve(
+    // > observed object/domNode/etc
+    $('.header')[0],
+    // > observed attributes/methods
     'innerHTML',
     'id',
     'style.backgroundColor',
@@ -24,6 +27,7 @@ var $observedObject = new ObjectObserve($('.header')[0],
     'style.height',
     'setAttribute()',
     'classList.add()',
+    // > global callback is optinal
     function(arg){
         console.log('constructor', arg, this);
 });
