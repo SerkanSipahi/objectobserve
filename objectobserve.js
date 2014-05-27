@@ -93,6 +93,12 @@ var ObjectObserve = (function(undefined, window){
                 context.hasMethod = /\((.*?)\)/.exec(props[i]) ? true : false;
                 context.notation = props[i];
 
+            if(context.hasMethod){
+                props[i] = context.notation.replace(/\((.*?)\)/g, '');
+                propsAsArray = props[i].split('.');
+                context.notation = props[i];
+            }
+
             if(propsAsArray.length > 1){
 
                 var constructorPrototypeReferenceState = constructor.prototype;
@@ -107,21 +113,29 @@ var ObjectObserve = (function(undefined, window){
             }
 
             // > todo: dokumentieren
-            addObjectByString(constructor.prototype, props[i], function(arg){
+            addObjectByString(constructor.prototype, props[i], function(){
 
                 /*
                  * Wert in das echte Objekt schreiben bzw. aufrufen!
                  * */
-                 // > setter
-                 if(arg!==undefined){
-                     addObjectByString(object, this.notation, arg);
-                 } else if(arg===undefined){
-                     if(this.hasMethod){
-                         var lastIndexOf = this.notation.lastIndexOf(".");
-                         var firstpart = this.notation.slice(0, lastIndexOf);
-                         var secondpart = this.notation.slice(lastIndexOf+1);
-                         var tx = addObjectByString(object, firstpart);
+                 var objectReferenceState = object;
+
+                  // > setter
+                 if(!this.hasMethod){
+                     addObjectByString(object, this.notation, arguments[0]);
+                 // > wenn funktionsaufruf
+                 } else if(this.hasMethod){
+                     var lastIndexOf = this.notation.lastIndexOf("."),
+                         firstpart=null, secondpart=null;
+
+                     if(lastIndexOf!==-1){
+                         firstpart = this.notation.slice(0, lastIndexOf);
+                         secondpart = this.notation.slice(lastIndexOf+1);
+                     } else {
+                         firstpart = this.notation;
                      }
+
+                     addObjectByString(object, firstpart).apply(objectReferenceState, arguments);
                  }
 
                 /*
@@ -169,6 +183,7 @@ window.onload = function(){
         'style.width',
         'style.height',
         'setAttribute()',
+        'classList.add()',
         function(arg){
             console.log('constructor', arg, this);
     });
@@ -189,21 +204,12 @@ window.onload = function(){
     $observedObject.onStyleBackgroundColor(function(arg){
         console.log('onStyleBackgroundColor', arg, this);
     });
-    /*
+    $observedObject.onClassListAdd(function(arg){
+        console.log('onClassListAdd', arg, this);
+    });
     $observedObject.onSetAttribute(function(arg){
         console.log('onSetAttribute', arg, this);
     });
-    */
-    /*
-    $observedObject.onSetAttribute({
-        before : function(e){
-
-        },
-        after : function(e){
-
-        }
-    });
-    */
 
     // > set or get to trigger the registered callbacks
     $observedObject.style.backgroundColor('red');
@@ -211,7 +217,9 @@ window.onload = function(){
     $observedObject.style.width('300px');
     $observedObject.id('setter:im-id');
     $observedObject.innerHTML('setter:Hello innerHTML :)');
-    //$observedObject.setAttribute('data-foo', 'nice');
+
+    $observedObject.classList.add('added-class');
+    $observedObject.setAttribute('data-foo', 'nice');
 
     console.log($observedObject);
 
