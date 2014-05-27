@@ -1,4 +1,4 @@
-#### ObjectObserve.js Beta / ( ECMAscript 5 ) / Observe whatever you want
+#### ObjectObserve.js Alpha Release / ( ECMAscript 5 ) / Observe whatever you want
     * Objects
     * domNodes, native domMethods
     * Third Party Librariess e.g jQuery, Zepto, etc

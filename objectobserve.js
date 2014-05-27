@@ -181,6 +181,10 @@ var ObjectObserve = (function(undefined, window){
             }.bind(context));
         }
     }
+    Observe.prototype.getObject = function(){
+        return this.observed_object;
+    };
+
 
     return Observe;
 
