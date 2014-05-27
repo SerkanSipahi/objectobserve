@@ -61,7 +61,7 @@ var ObjectObserve = (function(undefined, window){
     function Observe(){
 
         var self           = this,
-            constructor    = self.constructor,
+            constructor    = Observe.prototype.constructor,
             args           = Array.prototype.slice.call(arguments, 0),
             argsLength     = args.length,
             callback       = undefined,
@@ -92,6 +92,7 @@ var ObjectObserve = (function(undefined, window){
                 lastProp = null;
                 context.hasMethod = /\((.*?)\)/.exec(props[i]) ? true : false;
                 context.notation = props[i];
+                context.object = object;
 
             if(context.hasMethod){
                 props[i] = context.notation.replace(/\((.*?)\)/g, '');
@@ -118,13 +119,13 @@ var ObjectObserve = (function(undefined, window){
                 /*
                  * Wert in das echte Objekt schreiben bzw. aufrufen!
                  * */
-                 var objectReferenceState = object,
-                     tmpObjectReference = object,
+                 var objectReferenceState = this.object,
+                     tmpObjectReference = this.object,
                      baseClassName = null,
                      baseClassInstance = null;
 
                  if(!this.hasMethod){
-                     addObjectByString(object, this.notation, arguments[0]);
+                     addObjectByString(this.object, this.notation, arguments[0]);
                  } else if(this.hasMethod){
 
                      var lastIndexOf = this.notation.lastIndexOf("."),
@@ -147,7 +148,7 @@ var ObjectObserve = (function(undefined, window){
 
                      } else {
                          firstpart = this.notation;
-                         addObjectByString(object, firstpart).apply(objectReferenceState, arguments);
+                         addObjectByString(this.object, firstpart).apply(objectReferenceState, arguments);
                      }
 
                  }
@@ -201,7 +202,9 @@ window.onload = function(){
         'appendChild()',
         function(arg){
             //console.log('constructor', arg, this);
-    });
+    }/* 'header' */);
+
+    var $observedBody = new ObjectObserve($('body')[0], 'style.backgroundColor'/*, 'body' */);
 
     // > register callbacks
     $observedObject.onId(function(arg){
@@ -246,6 +249,8 @@ window.onload = function(){
     $observedObject.setAttribute('data-foo', 'nice');
     $observedObject.appendChild(document.createElement('span'));
 
+    $observedBody.style.backgroundColor('green');
     console.log($observedObject);
+    console.log($observedBody);
 
 };
