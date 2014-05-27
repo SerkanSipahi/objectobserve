@@ -19,7 +19,7 @@ var $ = document.querySelectorAll.bind(document);
 var $observedObject = new ObjectObserve(
     // > observed object
     $('.header')[0],
-    // > observed attributes/methods
+    // > register observed attributes/methods
     'innerHTML',
     'id',
     'style.backgroundColor',
@@ -29,6 +29,8 @@ var $observedObject = new ObjectObserve(
     'classList.add()',
     'classList.remove()',
     'appendChild()',
+    //etc.
+    //etc.
     // > global callback optional
     function(arg){
         //console.log('constructor', arg, this);
