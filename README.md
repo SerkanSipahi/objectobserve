@@ -16,17 +16,14 @@
 ````js
 var $ = document.querySelectorAll.bind(document);
 
-var $observedObject = new ObjectObserve(
-    // > observed object
-    $('.header')[0],
-    // > observed attributes/methods
+var $observedObject = new ObjectObserve($('.header')[0],
     'innerHTML',
     'id',
     'style.backgroundColor',
     'style.width',
     'style.height',
     'setAttribute()',
-    // > global callback - optional
+    'classList.add()',
     function(arg){
         console.log('constructor', arg, this);
 });
@@ -47,11 +44,12 @@ $observedObject.onStyleHeight(function(arg){
 $observedObject.onStyleBackgroundColor(function(arg){
     console.log('onStyleBackgroundColor', arg, this);
 });
-/*
+$observedObject.onClassListAdd(function(arg){
+    console.log('onClassListAdd', arg, this);
+});
 $observedObject.onSetAttribute(function(arg){
     console.log('onSetAttribute', arg, this);
 });
-*/
 
 // > set or get to trigger the registered callbacks
 $observedObject.style.backgroundColor('red');
@@ -59,7 +57,9 @@ $observedObject.style.height('100px');
 $observedObject.style.width('300px');
 $observedObject.id('setter:im-id');
 $observedObject.innerHTML('setter:Hello innerHTML :)');
-//$observedObject.setAttribute('data-foo', 'nice');
+
+$observedObject.classList.add('added-class');
+$observedObject.setAttribute('data-foo', 'nice');
 
 console.log($observedObject);
 ````

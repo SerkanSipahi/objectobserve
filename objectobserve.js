@@ -175,7 +175,6 @@ window.onload = function(){
 
     var $ = document.querySelectorAll.bind(document);
 
-    // > init observer
     var $observedObject = new ObjectObserve($('.header')[0],
         'innerHTML',
         'id',
@@ -204,9 +203,11 @@ window.onload = function(){
     $observedObject.onStyleBackgroundColor(function(arg){
         console.log('onStyleBackgroundColor', arg, this);
     });
+    /*
     $observedObject.onClassListAdd(function(arg){
         console.log('onClassListAdd', arg, this);
     });
+    */
     $observedObject.onSetAttribute(function(arg){
         console.log('onSetAttribute', arg, this);
     });
@@ -218,7 +219,7 @@ window.onload = function(){
     $observedObject.id('setter:im-id');
     $observedObject.innerHTML('setter:Hello innerHTML :)');
 
-    $observedObject.classList.add('added-class');
+    //$observedObject.classList.add('added-class');
     $observedObject.setAttribute('data-foo', 'nice');
 
     console.log($observedObject);
