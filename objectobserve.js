@@ -120,22 +120,11 @@ var ObjectObserve = (function(undefined, window){
                  * */
                  var objectReferenceState = object;
 
-                  // > setter
                  if(!this.hasMethod){
                      addObjectByString(object, this.notation, arguments[0]);
-                 // > wenn funktionsaufruf
                  } else if(this.hasMethod){
-                     var lastIndexOf = this.notation.lastIndexOf("."),
-                         firstpart=null, secondpart=null;
-
-                     if(lastIndexOf!==-1){
-                         firstpart = this.notation.slice(0, lastIndexOf);
-                         secondpart = this.notation.slice(lastIndexOf+1);
-                     } else {
-                         firstpart = this.notation;
-                     }
-
-                     addObjectByString(object, firstpart).apply(objectReferenceState, arguments);
+                     var tx = addObjectByString(object, this.notation);
+                     tx.apply(objectReferenceState, arguments)
                  }
 
                 /*
@@ -145,14 +134,14 @@ var ObjectObserve = (function(undefined, window){
                  * registriert wurde!
                  */
                 if(!is('undefined', callback)){
-                    callback.apply(object, arguments);
+                    callback.apply(objectReferenceState, arguments);
                 }
 
                 /*
                  * @attr on[Methode] aufrufen
                  **/
                 if(callbacks['on'+arrayToCamelCase(this.notation.split('.'))]!==undefined){
-                    callbacks['on'+arrayToCamelCase(this.notation.split('.'))].apply(object, arguments);
+                    callbacks['on'+arrayToCamelCase(this.notation.split('.'))].apply(objectReferenceState, arguments);
                 }
 
             }.bind(context));
@@ -203,11 +192,9 @@ window.onload = function(){
     $observedObject.onStyleBackgroundColor(function(arg){
         console.log('onStyleBackgroundColor', arg, this);
     });
-    /*
     $observedObject.onClassListAdd(function(arg){
         console.log('onClassListAdd', arg, this);
     });
-    */
     $observedObject.onSetAttribute(function(arg){
         console.log('onSetAttribute', arg, this);
     });
@@ -219,7 +206,7 @@ window.onload = function(){
     $observedObject.id('setter:im-id');
     $observedObject.innerHTML('setter:Hello innerHTML :)');
 
-    //$observedObject.classList.add('added-class');
+    $observedObject.classList.add('added-class');
     $observedObject.setAttribute('data-foo', 'nice');
 
     console.log($observedObject);
