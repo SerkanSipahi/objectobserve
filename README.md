@@ -1,4 +1,4 @@
-#### ObjectObserve.js ( ECMAscript 5 ) - observe whatever you want
+#### ObjectObserve.js Beta / ( ECMAscript 5 ) / Observe whatever you want
     * Objects
     * domNode, native domMethods
     * Third Party Librariess e.g jQuery, Zepto, etc
@@ -17,7 +17,7 @@
 var $ = document.querySelectorAll.bind(document);
 
 var $observedObject = new ObjectObserve(
-    // > observed object/domNode/etc
+    // > observed object
     $('.header')[0],
     // > observed attributes/methods
     'innerHTML',
@@ -27,9 +27,11 @@ var $observedObject = new ObjectObserve(
     'style.height',
     'setAttribute()',
     'classList.add()',
-    // > global callback is optinal
+    'classList.remove()',
+    'appendChild()',
+    // > global callback optional
     function(arg){
-        console.log('constructor', arg, this);
+        //console.log('constructor', arg, this);
 });
 
 // > register callbacks
@@ -51,7 +53,13 @@ $observedObject.onStyleBackgroundColor(function(arg){
 $observedObject.onClassListAdd(function(arg){
     console.log('onClassListAdd', arg, this);
 });
+$observedObject.onClassListRemove(function(arg){
+    console.log('onClassListRemove', arg, this);
+});
 $observedObject.onSetAttribute(function(arg){
+    console.log('onSetAttribute', arg, this);
+});
+$observedObject.onAppendChild(function(arg){
     console.log('onSetAttribute', arg, this);
 });
 
@@ -63,7 +71,11 @@ $observedObject.id('setter:im-id');
 $observedObject.innerHTML('setter:Hello innerHTML :)');
 
 $observedObject.classList.add('added-class');
+$observedObject.classList.add('added-foo-class');
+$observedObject.classList.remove('added-foo-class');
+
 $observedObject.setAttribute('data-foo', 'nice');
+$observedObject.appendChild(document.createElement('span'));
 
 console.log($observedObject);
 ````

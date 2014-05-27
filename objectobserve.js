@@ -118,13 +118,40 @@ var ObjectObserve = (function(undefined, window){
                 /*
                  * Wert in das echte Objekt schreiben bzw. aufrufen!
                  * */
-                 var objectReferenceState = object;
+                 var objectReferenceState = object,
+                     tmpObjectReference = object,
+                     baseClassName = null,
+                     baseClassInstance = null;
 
                  if(!this.hasMethod){
                      addObjectByString(object, this.notation, arguments[0]);
                  } else if(this.hasMethod){
-                     var tx = addObjectByString(object, this.notation);
-                     tx.apply(objectReferenceState, arguments)
+
+                     var lastIndexOf = this.notation.lastIndexOf("."),
+                         firstpart=null, secondpart=null;
+
+                     if(lastIndexOf!==-1){
+                         firstpart = this.notation.slice(0, lastIndexOf);
+                         secondpart = this.notation.slice(lastIndexOf+1);
+
+                         baseClassName = addObjectByString(tmpObjectReference, firstpart).constructor.name;
+                         baseClassInstance = addObjectByString(tmpObjectReference, firstpart);
+                         if(baseClassName !== 'Function'){
+
+                             DOMTokenList.prototype['@__'+secondpart] = function() {
+                                 console.log(arguments);
+                                 var args = arguments[0];
+                                 this[secondpart].apply(this, args);
+                             };
+                             baseClassInstance['@__'+secondpart](arguments);
+
+                         }
+
+                     } else {
+                         firstpart = this.notation;
+                         addObjectByString(object, firstpart).apply(objectReferenceState, arguments);
+                     }
+
                  }
 
                 /*
@@ -172,8 +199,10 @@ window.onload = function(){
         'style.height',
         'setAttribute()',
         'classList.add()',
+        'classList.remove()',
+        'appendChild()',
         function(arg){
-            console.log('constructor', arg, this);
+            //console.log('constructor', arg, this);
     });
 
     // > register callbacks
@@ -195,7 +224,13 @@ window.onload = function(){
     $observedObject.onClassListAdd(function(arg){
         console.log('onClassListAdd', arg, this);
     });
+    $observedObject.onClassListRemove(function(arg){
+        console.log('onClassListRemove', arg, this);
+    });
     $observedObject.onSetAttribute(function(arg){
+        console.log('onSetAttribute', arg, this);
+    });
+    $observedObject.onAppendChild(function(arg){
         console.log('onSetAttribute', arg, this);
     });
 
@@ -207,7 +242,11 @@ window.onload = function(){
     $observedObject.innerHTML('setter:Hello innerHTML :)');
 
     $observedObject.classList.add('added-class');
+    $observedObject.classList.add('added-foo-class');
+    $observedObject.classList.remove('added-foo-class');
+
     $observedObject.setAttribute('data-foo', 'nice');
+    $observedObject.appendChild(document.createElement('span'));
 
     console.log($observedObject);
 
