@@ -65,7 +65,7 @@ $observedObject.onAppendChild(function(arg){
     console.log('onSetAttribute', arg, this);
 });
 
-// > set or get to trigger the registered callbacks
+// > set to trigger the registered callbacks
 $observedObject.style.backgroundColor('red');
 $observedObject.style.height('100px');
 $observedObject.style.width('300px');
