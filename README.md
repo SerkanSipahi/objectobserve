@@ -14,15 +14,25 @@
     * Internet-Explorer +9
 
 ````js
-var $ = document.querySelectorAll.bind(document);
+var $ = document.querySelectorAll.bind(document),
+    nativeObject = {
+        a : {
+            b : function(arg){
+                this.a.c = arg;
+            },
+            c : null
+        },
+        d : null
+    };
 
-var $observedFoo = new ObjectObserve($('.foo')[0], function(changes){
+var $observedFoo  = new ObjectObserve($('.foo')[0], function(changes){
 
-});
-var $observedBoo = new ObjectObserve($('.boo')[0], function(changes){
+}); // constructor callback is optional
 
-});
+var $observedBoo  = new ObjectObserve($('.boo')[0]);
+var $nativeObject = new ObjectObserve(nativeObject);
 
+// > register callbacks
 $observedFoo.on({
     'setAttribute' : function(changes){
         console.log('onSetAttribute', changes, this);
@@ -53,23 +63,31 @@ $observedBoo.on({
     }
 });
 
+$nativeObject.on({
+   'a.b' : function(changes){
+       console.log('on.a.b', changes, this);
+   },
+   'd' : function(changes){
+       console.log('on.d', changes, this);
+   }
+});
+
 // > Setter
 $observedFoo.io({'setAttribute' : ['data-foo', 1234]});
 $observedFoo.io({'appendChild' : document.createElement('span')});
 $observedFoo.io({'classList.add' : 'im-added-class'});
+$observedFoo.io({'classList.contains' : 'im-added-class'});
 $observedFoo.io({'innerHTML' : 'im innerHTML'});
 
 $observedBoo.io({'style.backgroundColor' : 'red'});
 $observedBoo.io({'style.color' : 'green'});
 $observedBoo.io({'style.fontWeight' : 'bold'});
 
+$nativeObject.io({'a.b' : '"a.b" will write in "a.b.c"'});
+$nativeObject.io({'d' : 'Hello World in "d"'});
+
 console.log($observedFoo);
 console.log($observedBoo);
-
-// > Getter
-//$observedFoo.io('style.backgroundColor');
-//$observedFoo.io('innerHTML');
-
-};
+console.log($nativeObject);
 ````
 

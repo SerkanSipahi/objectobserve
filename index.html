@@ -19,14 +19,12 @@
 
             var $observedFoo  = new ObjectObserve($('.foo')[0], function(changes){
 
-            });
-            var $observedBoo  = new ObjectObserve($('.boo')[0], function(changes){
+            }); // constructor callback is optional
 
-            });
-            var $nativeObject = new ObjectObserve(nativeObject, function(changes){
+            var $observedBoo  = new ObjectObserve($('.boo')[0]);
+            var $nativeObject = new ObjectObserve(nativeObject);
 
-            });
-
+            // > register callbacks
             $observedFoo.on({
                 'setAttribute' : function(changes){
                     console.log('onSetAttribute', changes, this);
