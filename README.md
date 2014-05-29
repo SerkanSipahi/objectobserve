@@ -1,4 +1,4 @@
-#### ObjectObserve.js / Beta Release / ECMAscript 5 / Observe whatever you want
+#### ObjectObserve.js / Alpha R1 / ECMAscript 5 / Observe whatever you want
     * Objects
     * domNodes, native domMethods
     * Third Party Librariess e.g jQuery, Zepto, etc
@@ -25,39 +25,39 @@ var $observedBoo = new ObjectObserve($('.boo')[0], function(changes){
 
 $observedFoo.on({
     'setAttribute' : function(changes){
-
+        console.log('onSetAttribute', changes, this);
     },
     'appendChild' : function(changes){
-
+        console.log('onAppendChild', changes, this);
     },
     'classList.remove' : function(changes){
-
+        console.log('onClassListRemove', changes, this);
     },
     'classList.add' : function(changes){
-
+        console.log('onClassListAdd', changes, this);
     },
     'classList.contain' : function(changes){
-
+        console.log('onClassListContain', changes, this);
     }
 });
 
 $observedBoo.on({
     'style.backgroundColor' : function(changes){
-
+        console.log('onStyleBackgroundColor', changes, this);
     },
     'style.color' : function(changes){
-
+        console.log('onStyleColor', changes, this);
     },
     'style.fontWeight' : function(changes){
-
+        console.log('onStyleFontWeight', changes, this);
     }
 });
 
+// > Setter
 $observedFoo.io({'setAttribute' : ['data-foo', 1234]});
 $observedFoo.io({'appendChild' : document.createElement('span')});
-$observedFoo.io({'classList.remove' : 'foo-class'});
-$observedFoo.io({'classList.add' : 'foo-class'});
-$observedFoo.io({'classList.contain' : 'foo-class'});
+$observedFoo.io({'classList.add' : 'im-added-class'});
+$observedFoo.io({'innerHTML' : 'im innerHTML'});
 
 $observedBoo.io({'style.backgroundColor' : 'red'});
 $observedBoo.io({'style.color' : 'green'});
@@ -66,7 +66,10 @@ $observedBoo.io({'style.fontWeight' : 'bold'});
 console.log($observedFoo);
 console.log($observedBoo);
 
-$observedFoo.io('style.backgroundColor');
-$observedFoo.io('innerHTML');
+// > Getter
+//$observedFoo.io('style.backgroundColor');
+//$observedFoo.io('innerHTML');
+
+};
 ````
 
