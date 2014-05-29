@@ -1,6 +1,6 @@
 //======= domObserve ==========
 
-var ObjectObserve = (function(undefined, window){
+var _ObjectObserve = (function(undefined, window){
 
     'use strict';
 
@@ -12,7 +12,7 @@ var ObjectObserve = (function(undefined, window){
         capitalize = function(s){
             return s[0].toUpperCase() + s.slice(1);
         },
-        addObjectByString = function(object, path, key, value){
+        addObjectByString = function(object, path, key){
 
             var i = 0, objectReferenceState = object,
                 path = path.split('.');
@@ -190,125 +190,131 @@ var ObjectObserve = (function(undefined, window){
 
 }(void(0), this));
 
+////////////////////////////
+
+var ObjectObserve = (function(undefined, window){
+
+    'use strict';
+
+    var slice = Array.prototype.slice,
+        toString = Object.prototype.toString,
+        is = function(type, obj){
+            return ( toString.call(obj).toLowerCase() === '[object '+type+']' );
+        },
+        each = function(obj, callback){
+
+            if (obj === void 0 || obj === null) { throw new TypeError(); }
+            var t = Object(obj),
+                len = t.length >>> 0;
+
+            if (typeof callback !== 'function') { throw new TypeError(); }
+
+            for (var item in t){
+                if(!t.hasOwnProperty(item)){ continue; }
+                callback.call(t[item], item, t[item]);
+            }
+
+        },
+        ioObjectByString = function(object, path, value){
+
+            var i = 0,
+                path = path.split('.');
+
+            for (; i < path.length; i++){
+                if (value !== undefined && i + 1 === path.length){
+                    object[path[i]] = value;
+                }
+                object = object[path[i]];
+            }
+            return object;
+        };
+
+    function Observe(object){
+
+        this.object  = object;
+        this.call    = {};
+        this.call.on = {};
+
+    }
+
+    Observe.prototype = {
+        on : function(object){
+            each(object, function(k, v){
+                this.call.on[k] = v;
+            }.bind(this));
+        },
+        io : function(notation){
+
+            var hasMethod = this._hasMethod(notation);
+
+
+        },
+        _hasMethod : function(notation){
+            
+        }
+    };
+
+    return Observe;
+
+}(void(0), this));
+
+///////////////////////////
+
 window.onload = function(){
 
     var $ = document.querySelectorAll.bind(document);
 
-    var $observedObject = new ObjectObserve($('.header')[0],
-        'innerHTML',
-        'id',
-        'style.backgroundColor',
-        'style.width',
-        'style.height',
-        'setAttribute()',
-        'classList.add()',
-        'classList.remove()',
-        'appendChild()',
-        function(arg){
-            //console.log('constructor', arg, this);
+    var $observedFoo = new ObjectObserve($('.foo')[0], function(changes){
+
     });
+    var $observedBoo = new ObjectObserve($('.boo')[0], function(changes){
 
-    var $observedBody = new ObjectObserve(
-        $('body')[0],
-        'style.backgroundColor',
-        'style.height',
-        'style.fontStyle'
-    );
-
-    // > register callbacks
-    $observedObject.onId(function(arg){
-        console.log('onId_callback', arg, this);
-    });
-    $observedObject.onInnerHTML(function(arg){
-        console.log('onInnerHTML_callback', arg, this);
-    });
-    $observedObject.onStyleWidth(function(arg){
-        console.log('onStyleWidth_callback', arg, this);
-    });
-    $observedObject.onStyleHeight(function(arg){
-        console.log('onStyleHeight_callback', arg, this);
-    });
-    $observedObject.onStyleBackgroundColor(function(arg){
-        console.log('onStyleBackgroundColor', arg, this);
-    });
-    $observedObject.onClassListAdd(function(arg){
-        console.log('onClassListAdd', arg, this);
-    });
-    $observedObject.onClassListRemove(function(arg){
-        console.log('onClassListRemove', arg, this);
-    });
-    $observedObject.onSetAttribute(function(arg){
-        console.log('onSetAttribute', arg, this);
-    });
-    $observedObject.onAppendChild(function(arg){
-        console.log('onSetAttribute', arg, this);
-    });
-
-    // > set or get to trigger the registered callbacks
-    $observedObject.style.backgroundColor('red');
-    $observedObject.style.height('100px');
-    $observedObject.style.width('300px');
-    $observedObject.id('setter:im-id');
-    $observedObject.innerHTML('setter:Hello innerHTML :)');
-
-    $observedObject.classList.add('added-class');
-    $observedObject.classList.add('added-foo-class');
-    $observedObject.classList.remove('added-foo-class');
-
-    $observedObject.setAttribute('data-foo', 'nice');
-    $observedObject.appendChild(document.createElement('span'));
-
-    $observedBody.style.backgroundColor('green');
-    console.log($observedObject);
-    console.log($observedBody);
-
-    ////////////////////////
-    /*
-    var $observedFoo = new ObjectObserve($('.header')[0]),
-        foo = null, boo = null;
-
-    $observedFoo.on({
-        setAttribute : function(){
-
-        },
-        appendChild : function(){
-
-        },
-        classList : {
-            remove : function(){
-
-            },
-            add : function(){
-
-            },
-            contain : function(){
-
-            }
-        }
     });
 
     $observedFoo.on({
-        style : {
-            backgroundColor : function(){
+        'setAttribute' : function(changes){
 
-            },
-            color : function(){
+        },
+        'appendChild' : function(changes){
 
-            },
-            fontWeight : function(){
+        },
+        'classList.remove' : function(changes){
 
-            }
+        },
+        'classList.add' : function(changes){
+
+        },
+        'classList.contain' : function(changes){
+
         }
     });
 
+    $observedBoo.on({
+        'style.backgroundColor' : function(changes){
+
+        },
+        'style.color' : function(changes){
+
+        },
+        'style.fontWeight' : function(changes){
+
+        }
+    });
+
+    $observedFoo.io({'setAttribute' : ['data-foo', 1234]});
+    $observedFoo.io({'appendChild' : document.createElement('span')});
+    $observedFoo.io({'classList.remove' : 'foo-class'});
     $observedFoo.io({'classList.add' : 'foo-class'});
     $observedFoo.io({'classList.contain' : 'foo-class'});
-    $observedFoo.io({'setAttribute' : ['data-foo', 1234]});
-    $observedFoo.io({'style.backgroundColor' : 'red'}, function(){
 
-    });
+    $observedBoo.io({'style.backgroundColor' : 'red'});
+    $observedBoo.io({'style.color' : 'green'});
+    $observedBoo.io({'style.fontWeight' : 'bold'});
 
-    foo = $observedFoo.io('style.backgroundColor');
-    boo = $observedFoo.io('innerHTML');
-    */
+    console.log($observedFoo);
+    console.log($observedBoo);
+
+    $observedFoo.io('style.backgroundColor');
+    $observedFoo.io('innerHTML');
+
 };
