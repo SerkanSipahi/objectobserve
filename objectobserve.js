@@ -111,6 +111,7 @@ var ObjectObserve = (function(undefined, window){
                 onFunction = this.call.on[notation],
                 result     = null;
 
+            // > todo: start refactoring !
             if(object instanceof HTMLElement){
                 if(baseClass==='Function' && hasMethodCall){
                     result = ioObjectByString(object, notation
@@ -134,6 +135,7 @@ var ObjectObserve = (function(undefined, window){
                     result = ioObjectByString(object, notation, args);
                 }
             }
+            // > todo: end refactoring !
 
             if(this.globalObject!==undefined){
                 this.globalObject.call(object, args);
