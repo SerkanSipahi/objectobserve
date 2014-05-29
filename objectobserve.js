@@ -49,11 +49,12 @@ var ObjectObserve = (function(undefined, window){
             return container;
         };
 
-    function Observe(object){
+    function Observe(object, globalCallback){
 
-        this.object  = object;
-        this.call    = {};
-        this.call.on = {};
+        this.object       = object;
+        this.globalObject = globalCallback;
+        this.call         = {};
+        this.call.on      = {};
     }
 
     Observe.prototype = {
@@ -96,7 +97,7 @@ var ObjectObserve = (function(undefined, window){
         _getBaseClass : function(object, path){
 
             var type = 'Function',
-                res  = ioObjectByString(object, path).constructor.name;
+                res  = object instanceof HTMLElement ? ioObjectByString(object, path).constructor.name : 'Object';
 
             // > nur für setter methoden
             if(!/String|Number/.exec(res)){
@@ -110,18 +111,32 @@ var ObjectObserve = (function(undefined, window){
                 onFunction = this.call.on[notation],
                 result     = null;
 
-            if(baseClass==='Function' && hasMethodCall){
-                result = ioObjectByString(object, notation
-                ).apply(object, !is('array', args) ? [ args ] : args);
-            } else if(baseClass==='Function' && !hasMethodCall ){
-                result = ioObjectByString(object, notation, args);
-            } else if(hasMethodCall) {
-                window[baseClass].prototype['a__'+callParts[1]] = function() {
-                    return this[callParts[1]].apply(this, !is('array', args) ? [ args ] : args);
-                };
-                result = ioObjectByString(object, callParts[0])['a__'+callParts[1]](args);
-            } else if(!hasMethodCall){
-                result = ioObjectByString(object, notation, args);
+            if(object instanceof HTMLElement){
+                if(baseClass==='Function' && hasMethodCall){
+                    result = ioObjectByString(object, notation
+                    ).apply(object, !is('array', args) ? [ args ] : args);
+                } else if(baseClass==='Function' && !hasMethodCall ){
+                    result = ioObjectByString(object, notation, args);
+                } else if(hasMethodCall) {
+                    window[baseClass].prototype['a__'+callParts[1]] = function() {
+                        return this[callParts[1]].apply(this, !is('array', args) ? [ args ] : args);
+                    };
+                    result = ioObjectByString(object, callParts[0])['a__'+callParts[1]](args);
+                } else if(!hasMethodCall){
+                    result = ioObjectByString(object, notation, args);
+                }
+
+            } else if(object instanceof Object){
+                if(hasMethodCall){
+                    result = ioObjectByString(object, notation
+                    ).apply(object, !is('array', args) ? [ args ] : args);
+                } else {
+                    result = ioObjectByString(object, notation, args);
+                }
+            }
+
+            if(this.globalObject!==undefined){
+                this.globalObject.call(object, args);
             }
 
             if(onFunction!==undefined){
