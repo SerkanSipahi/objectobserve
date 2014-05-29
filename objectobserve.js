@@ -206,9 +206,14 @@ window.onload = function(){
         'appendChild()',
         function(arg){
             //console.log('constructor', arg, this);
-    }/* 'header' */);
+    });
 
-    var $observedBody = new ObjectObserve($('body')[0], 'style.backgroundColor'/*, 'body' */);
+    var $observedBody = new ObjectObserve(
+        $('body')[0],
+        'style.backgroundColor',
+        'style.height',
+        'style.fontStyle'
+    );
 
     // > register callbacks
     $observedObject.onId(function(arg){
@@ -257,4 +262,53 @@ window.onload = function(){
     console.log($observedObject);
     console.log($observedBody);
 
+    ////////////////////////
+    /*
+    var $observedFoo = new ObjectObserve($('.header')[0]),
+        foo = null, boo = null;
+
+    $observedFoo.on({
+        setAttribute : function(){
+
+        },
+        appendChild : function(){
+
+        },
+        classList : {
+            remove : function(){
+
+            },
+            add : function(){
+
+            },
+            contain : function(){
+
+            }
+        }
+    });
+
+    $observedFoo.on({
+        style : {
+            backgroundColor : function(){
+
+            },
+            color : function(){
+
+            },
+            fontWeight : function(){
+
+            }
+        }
+    });
+
+    $observedFoo.io({'classList.add' : 'foo-class'});
+    $observedFoo.io({'classList.contain' : 'foo-class'});
+    $observedFoo.io({'setAttribute' : ['data-foo', 1234]});
+    $observedFoo.io({'style.backgroundColor' : 'red'}, function(){
+
+    });
+
+    foo = $observedFoo.io('style.backgroundColor');
+    boo = $observedFoo.io('innerHTML');
+    */
 };
