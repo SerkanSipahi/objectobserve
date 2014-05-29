@@ -68,10 +68,10 @@
 
             // > Setter
             $observedDomNode.io({'setAttribute' : ['data-foo', 1234]});
+            $observedDomNode.io({'innerHTML' : 'im innerHTML'});
             $observedDomNode.io({'appendChild' : document.createElement('span')});
             $observedDomNode.io({'classList.add' : 'im-added-class'});
             $observedDomNode.io({'classList.contains' : 'im-added-class'});
-            $observedDomNode.io({'innerHTML' : 'im innerHTML'});
 
             $observedDomNode_2.io({'style.backgroundColor' : 'red'});
             $observedDomNode_2.io({'style.color' : 'green'});
