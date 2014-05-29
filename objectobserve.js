@@ -250,7 +250,7 @@ var ObjectObserve = (function(undefined, window){
 
         },
         _hasMethod : function(notation){
-            
+
         }
     };
 

@@ -1,4 +1,4 @@
-#### ObjectObserve.js Alpha Release / ( ECMAscript 5 ) / Observe whatever you want
+#### ObjectObserve.js / Beta Release / ECMAscript 5 / Observe whatever you want
     * Objects
     * domNodes, native domMethods
     * Third Party Librariess e.g jQuery, Zepto, etc
@@ -16,73 +16,57 @@
 ````js
 var $ = document.querySelectorAll.bind(document);
 
-var $observedObject = new ObjectObserve(
-    // > observed object
-    $('.header')[0],
-    // > register observed attributes/methods
-    'innerHTML',
-    'id',
-    'style.backgroundColor',
-    'style.width',
-    'style.height',
-    'setAttribute()',
-    'classList.add()',
-    'classList.remove()',
-    'appendChild()',
-    //etc.
-    //etc.
-    // > global callback optional
-    function(arg){
-        //console.log('constructor', arg, this);
+var $observedFoo = new ObjectObserve($('.foo')[0], function(changes){
+
+});
+var $observedBoo = new ObjectObserve($('.boo')[0], function(changes){
+
 });
 
-// > register callbacks
-$observedObject.onId(function(arg){
-    console.log('onId_callback', arg, this);
-});
-$observedObject.onInnerHTML(function(arg){
-    console.log('onInnerHTML_callback', arg, this);
-});
-$observedObject.onStyleWidth(function(arg){
-    console.log('onStyleWidth_callback', arg, this);
-});
-$observedObject.onStyleHeight(function(arg){
-    console.log('onStyleHeight_callback', arg, this);
-});
-$observedObject.onStyleBackgroundColor(function(arg){
-    console.log('onStyleBackgroundColor', arg, this);
-});
-$observedObject.onClassListAdd(function(arg){
-    console.log('onClassListAdd', arg, this);
-});
-$observedObject.onClassListRemove(function(arg){
-    console.log('onClassListRemove', arg, this);
-});
-$observedObject.onSetAttribute(function(arg){
-    console.log('onSetAttribute', arg, this);
-});
-$observedObject.onAppendChild(function(arg){
-    console.log('onSetAttribute', arg, this);
+$observedFoo.on({
+    'setAttribute' : function(changes){
+
+    },
+    'appendChild' : function(changes){
+
+    },
+    'classList.remove' : function(changes){
+
+    },
+    'classList.add' : function(changes){
+
+    },
+    'classList.contain' : function(changes){
+
+    }
 });
 
-// > set to trigger the registered callbacks
-$observedObject.style.backgroundColor('red');
-$observedObject.style.height('100px');
-$observedObject.style.width('300px');
-$observedObject.id('setter:im-id');
-$observedObject.innerHTML('setter:Hello innerHTML :)');
+$observedBoo.on({
+    'style.backgroundColor' : function(changes){
 
-$observedObject.classList.add('added-class');
-$observedObject.classList.add('added-foo-class');
-$observedObject.classList.remove('added-foo-class');
+    },
+    'style.color' : function(changes){
 
-$observedObject.setAttribute('data-foo', 'nice');
-$observedObject.appendChild(document.createElement('span'));
+    },
+    'style.fontWeight' : function(changes){
 
-console.log($observedObject);
+    }
+});
+
+$observedFoo.io({'setAttribute' : ['data-foo', 1234]});
+$observedFoo.io({'appendChild' : document.createElement('span')});
+$observedFoo.io({'classList.remove' : 'foo-class'});
+$observedFoo.io({'classList.add' : 'foo-class'});
+$observedFoo.io({'classList.contain' : 'foo-class'});
+
+$observedBoo.io({'style.backgroundColor' : 'red'});
+$observedBoo.io({'style.color' : 'green'});
+$observedBoo.io({'style.fontWeight' : 'bold'});
+
+console.log($observedFoo);
+console.log($observedBoo);
+
+$observedFoo.io('style.backgroundColor');
+$observedFoo.io('innerHTML');
 ````
-
-#### instance
-
-![instance](https://raw.githubusercontent.com/SerkanSipahi/objectobserve/master/instance.png)
 
