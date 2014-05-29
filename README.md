@@ -14,6 +14,8 @@
     * Internet-Explorer +9
 
 ````js
+jQuery.noConflict();
+
 var $ = document.querySelectorAll.bind(document),
     nativeObject = {
         a : {
@@ -25,12 +27,12 @@ var $ = document.querySelectorAll.bind(document),
         d : null
     };
 
-var $observedDomNode  = new ObjectObserve($('.foo')[0], function(changes){
+var $observedDomNode  = new ObjectObserve($('.domNode-class')[0], function(changes){
 
-}); // constructor callback is optional
-
-var $observedDomNode_2  = new ObjectObserve($('.boo')[0]);
-var $nativeObject = new ObjectObserve(nativeObject);
+}); // > constructor callback is optional
+var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]);
+var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));
+var $nativeObject       = new ObjectObserve(nativeObject);
 
 // > register callbacks domNode
 $observedDomNode.on({
@@ -64,6 +66,19 @@ $observedDomNode_2.on({
     }
 });
 
+// > register callbacks jquery
+$observedjQueryObj.on({
+    'css' : function(changes){
+        console.log('onCss', changes, this);
+    },
+    'html' : function(changes){
+        console.log('onHtml', changes, this);
+    },
+    'append' : function(changes){
+        console.log('onAppend', changes, this);
+    }
+});
+
 // > register callbacks native object
 $nativeObject.on({
    'a.b' : function(changes){
@@ -76,20 +91,30 @@ $nativeObject.on({
 
 // > Setter
 $observedDomNode.io({'setAttribute' : ['data-foo', 1234]});
+$observedDomNode.io({'innerHTML' : 'im innerHTML'});
 $observedDomNode.io({'appendChild' : document.createElement('span')});
 $observedDomNode.io({'classList.add' : 'im-added-class'});
 $observedDomNode.io({'classList.contains' : 'im-added-class'});
-$observedDomNode.io({'innerHTML' : 'im innerHTML'});
 
 $observedDomNode_2.io({'style.backgroundColor' : 'red'});
 $observedDomNode_2.io({'style.color' : 'green'});
 $observedDomNode_2.io({'style.fontWeight' : 'bold'});
+
+$observedjQueryObj.io({'css' : ['font-weight', 'bold']});
+$observedjQueryObj.io({'html' : 'html over <strong>jQuery</strong>'});
+$observedjQueryObj.io({'append' : '<span>append over jQuery</span>'});
 
 $nativeObject.io({'a.b' : '"a.b" will write in "a.b.c"'});
 $nativeObject.io({'d' : 'Hello World in "d"'});
 
 console.log($observedDomNode);
 console.log($observedDomNode_2);
+console.log($observedjQueryObj);
 console.log($nativeObject);
+
+// > Getter not working -- in progress :)
+//$observedFoo.io('style.backgroundColor');
+//$observedFoo.io('innerHTML');
+
 ````
 
