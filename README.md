@@ -25,18 +25,15 @@ var $ = document.querySelectorAll.bind(document),
         d : null
     };
 
-var $observedFoo  = new ObjectObserve($('.foo')[0], function(changes){
+var $observedDomNode  = new ObjectObserve($('.foo')[0], function(changes){
 
 }); // constructor callback is optional
 
-// > observe domNode
-var $observedBoo  = new ObjectObserve($('.boo')[0]);
-
-// > observe native object
+var $observedDomNode_2  = new ObjectObserve($('.boo')[0]);
 var $nativeObject = new ObjectObserve(nativeObject);
 
-// > register callbacks
-$observedFoo.on({
+// > register callbacks domNode
+$observedDomNode.on({
     'setAttribute' : function(changes){
         console.log('onSetAttribute', changes, this);
     },
@@ -54,7 +51,8 @@ $observedFoo.on({
     }
 });
 
-$observedBoo.on({
+// > register callbacks domNode_2
+$observedDomNode_2.on({
     'style.backgroundColor' : function(changes){
         console.log('onStyleBackgroundColor', changes, this);
     },
@@ -66,6 +64,7 @@ $observedBoo.on({
     }
 });
 
+// > register callbacks native object
 $nativeObject.on({
    'a.b' : function(changes){
        console.log('on.a.b', changes, this);
@@ -76,21 +75,21 @@ $nativeObject.on({
 });
 
 // > Setter
-$observedFoo.io({'setAttribute' : ['data-foo', 1234]});
-$observedFoo.io({'appendChild' : document.createElement('span')});
-$observedFoo.io({'classList.add' : 'im-added-class'});
-$observedFoo.io({'classList.contains' : 'im-added-class'});
-$observedFoo.io({'innerHTML' : 'im innerHTML'});
+$observedDomNode.io({'setAttribute' : ['data-foo', 1234]});
+$observedDomNode.io({'appendChild' : document.createElement('span')});
+$observedDomNode.io({'classList.add' : 'im-added-class'});
+$observedDomNode.io({'classList.contains' : 'im-added-class'});
+$observedDomNode.io({'innerHTML' : 'im innerHTML'});
 
-$observedBoo.io({'style.backgroundColor' : 'red'});
-$observedBoo.io({'style.color' : 'green'});
-$observedBoo.io({'style.fontWeight' : 'bold'});
+$observedDomNode_2.io({'style.backgroundColor' : 'red'});
+$observedDomNode_2.io({'style.color' : 'green'});
+$observedDomNode_2.io({'style.fontWeight' : 'bold'});
 
 $nativeObject.io({'a.b' : '"a.b" will write in "a.b.c"'});
 $nativeObject.io({'d' : 'Hello World in "d"'});
 
-console.log($observedFoo);
-console.log($observedBoo);
+console.log($observedDomNode);
+console.log($observedDomNode_2);
 console.log($nativeObject);
 ````
 
