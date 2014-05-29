@@ -1,9 +1,9 @@
 #### ObjectObserve.js / Alpha R1 / ECMAscript 5 / Observe whatever you want
-    * Objects
-    * domNodes, native domMethods
-    * Third Party Librariess e.g jQuery, Zepto, etc
-    * Methods
-    * Attributes
+    * Objects --works
+    * domNodes, native domMethods --works
+    * Third Party Librariess e.g jQuery, Zepto, etc --not testet
+    * Methods --works
+    * Attributes --works
     * whatever you want :)
 
 ##### Works well with:
