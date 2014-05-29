@@ -29,7 +29,10 @@ var $observedFoo  = new ObjectObserve($('.foo')[0], function(changes){
 
 }); // constructor callback is optional
 
+// > observe domNode
 var $observedBoo  = new ObjectObserve($('.boo')[0]);
+
+// > observe native object
 var $nativeObject = new ObjectObserve(nativeObject);
 
 // > register callbacks
