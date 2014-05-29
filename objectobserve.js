@@ -72,7 +72,7 @@ var ObjectObserve = (function(undefined, window){
                 ),
                 baseClass    = this._getBaseClass(this.object, callParts[0]);
 
-            this._trigger(
+            return this._trigger(
                 this.object,
                 hasMethodCall,
                 baseClass,
@@ -107,25 +107,28 @@ var ObjectObserve = (function(undefined, window){
         _trigger : function(object, hasMethodCall, baseClass, callParts, args){
 
             var notation   = callParts[1]===undefined ? callParts[0] : callParts.join('.'),
-                onFunction = this.call.on[notation];
+                onFunction = this.call.on[notation],
+                result     = null;
 
             if(baseClass==='Function' && hasMethodCall){
-                ioObjectByString(object, notation
+                result = ioObjectByString(object, notation
                 ).apply(object, !is('array', args) ? [ args ] : args);
             } else if(baseClass==='Function' && !hasMethodCall ){
-                ioObjectByString(object, notation, args);
+                result = ioObjectByString(object, notation, args);
             } else if(hasMethodCall) {
                 window[baseClass].prototype['a__'+callParts[1]] = function() {
-                    this[callParts[1]].apply(this, !is('array', args) ? [ args ] : args);
+                    return this[callParts[1]].apply(this, !is('array', args) ? [ args ] : args);
                 };
-                ioObjectByString(object, callParts[0])['a__'+callParts[1]](args);
+                result = ioObjectByString(object, callParts[0])['a__'+callParts[1]](args);
             } else if(!hasMethodCall){
-                ioObjectByString(object, notation, args);
+                result = ioObjectByString(object, notation, args);
             }
 
             if(onFunction!==undefined){
                 onFunction.call(object, args);
             }
+
+            return result;
 
         }
     };
