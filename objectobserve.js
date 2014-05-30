@@ -99,6 +99,12 @@ var ObjectObserve = (function(undefined, window){
             var type = 'Function',
                 res  = object instanceof HTMLElement ? ioObjectByString(object, path).constructor.name : 'Object';
 
+            // > firefox bugfix ( ff/ie has not constructor.name, we have to extract the baseclassname diffrent )
+            if(res===''){
+                res = ioObjectByString(object, path).constructor.toString();
+                res = /function ([a-zA-Z0-9]+)\(\)/.exec(res)[1];
+            }
+
             // > nur für setter methoden
             if(!/String|Number/.exec(res)){
                 type = res;
