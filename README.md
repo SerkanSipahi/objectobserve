@@ -42,9 +42,9 @@ var $ = document.querySelectorAll.bind(document),
 var $observedDomNode  = new ObjectObserve($('.domNode-class')[0], function(changes){
     // > constructor callback is optional
 });
-var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]); // > with nativ domNode
-var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));  // > with jQuery object
-var $nativeObject       = new ObjectObserve(nativeObject);             // > with custom object
+var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]); // domNode object
+var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));  // jQuery object
+var $nativeObject       = new ObjectObserve(nativeObject);             // custom object
 
 // > register callbacks domNode
 $observedDomNode.on({
