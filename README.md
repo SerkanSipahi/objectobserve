@@ -19,6 +19,12 @@
     * ~ 0.85 ms per object execution
     * the performance is very close to Object.observe - ES6
 
+#### Usage
+##### init Observer
+````js
+    var observedObject = new ObjectObserve(@observedObject, [, @function globalcallback]);
+````
+
 ````js
 jQuery.noConflict();
 
