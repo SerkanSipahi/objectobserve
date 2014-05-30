@@ -42,9 +42,9 @@ var $ = document.querySelectorAll.bind(document),
 var $observedDomNode  = new ObjectObserve($('.domNode-class')[0], function(changes){
     // > constructor callback is optional
 });
-var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]); // domNode object
-var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));  // jQuery object
-var $nativeObject       = new ObjectObserve(nativeObject);             // custom object
+var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]);
+var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));
+var $nativeObject       = new ObjectObserve(nativeObject);
 
 // > register callbacks domNode
 $observedDomNode.on({
@@ -65,7 +65,7 @@ $observedDomNode.on({
     }
 });
 
-// > register callbacks domNode_2 ( separated is possible )
+// > register callbacks domNode_2 separated is possible
 $observedDomNode_2.on({
     'style.backgroundColor' : function(changes){
         console.log('onStyleBackgroundColor', changes, this);
@@ -105,8 +105,7 @@ $nativeObject.on({
    }
 });
 
-// > write or read in observed object ! Each io operation triggered a registered callback :)
-
+// > Setter
 $observedDomNode.io({'setAttribute' : ['data-foo', 1234]});
 $observedDomNode.io({'innerHTML' : 'im innerHTML'});
 $observedDomNode.io({'appendChild' : document.createElement('span')});
@@ -117,7 +116,16 @@ $observedDomNode_2.io({'style.backgroundColor' : 'red'});
 $observedDomNode_2.io({'style.color' : 'green'});
 $observedDomNode_2.io({'style.fontWeight' : 'bold'});
 
+var bgColor    = $observedDomNode_2.io('style.backgroundColor');
+var color      = $observedDomNode_2.io('style.color');
+var fontWeight = $observedDomNode_2.io('style.fontWeight');
+
+console.log('bgColor', bgColor);
+console.log('color', color);
+console.log('fontWeight', fontWeight);
+
 $observedjQueryObj.io({'css' : ['font-weight', 'bold']});
+$observedjQueryObj.io({'css' : 'font-weight'});
 $observedjQueryObj.io({'html' : 'html over <strong>jQuery</strong>'});
 $observedjQueryObj.io({'append' : '<span>append over jQuery</span>'});
 
@@ -128,11 +136,6 @@ console.log($observedDomNode);
 console.log($observedDomNode_2);
 console.log($observedjQueryObj);
 console.log($nativeObject);
-
-// > Getter not working -- in progress :)
-//var foo = $observedFoo.io('style.backgroundColor');
-//var boo = $observedFoo.io('innerHTML');
-
 
 ````
 
