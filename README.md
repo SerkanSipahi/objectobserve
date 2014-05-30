@@ -53,7 +53,7 @@ $observedDomNode.on({
     }
 });
 
-// > register callbacks domNode_2 separated is possible
+// > register callbacks domNode_2 ( separated is possible )
 $observedDomNode_2.on({
     'style.backgroundColor' : function(changes){
         console.log('onStyleBackgroundColor', changes, this);
