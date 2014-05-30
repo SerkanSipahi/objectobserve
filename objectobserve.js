@@ -96,13 +96,16 @@ var ObjectObserve = (function(undefined, window){
         },
         _getBaseClass : function(object, path){
 
-            var type = 'Function',
+            var type = 'Function', tmpResFirefox='',tmpResSafari,
                 res  = object instanceof HTMLElement ? ioObjectByString(object, path).constructor.name : 'Object';
 
-            // > firefox bugfix ( ff/ie has not constructor.name, we have to extract the baseclassname diffrent )
+            // > firefox/safari bugfix ( ff/ie has not constructor.name, we have to extract the baseclassname diffrent )
             if(res===''){
-                res = ioObjectByString(object, path).constructor.toString();
-                res = /function ([a-zA-Z0-9]+)\(\)/.exec(res)[1];
+                tmpResFirefox = ioObjectByString(object, path).constructor.toString();
+                res = /function ([a-zA-Z0-9]+)\(\)/.exec(tmpResFirefox)[1];
+            } else if(res===undefined){
+                tmpResSafari = ioObjectByString(object, path).constructor.toString();
+                res =  /\[object ([a-zA-Z0-9]+)\]/.exec(tmpResSafari)[1];
             }
 
             // > nur für setter methoden
