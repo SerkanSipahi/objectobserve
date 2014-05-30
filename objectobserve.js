@@ -96,22 +96,17 @@ var ObjectObserve = (function(undefined, window){
         },
         _getBaseClass : function(object, path){
 
-            var type = 'Function', tmpResFirefox='',tmpResSafari,
-                res  = object instanceof HTMLElement ? ioObjectByString(object, path).constructor.name : 'Object';
+            var type     = 'Function',
+                res      = object instanceof HTMLElement ? ioObjectByString(object, path).constructor.name : 'Object';
 
-            // > firefox/safari bugfix ( ff/ie has not constructor.name, we have to extract the baseclassname diffrent )
-            if(res===''){
-                tmpResFirefox = ioObjectByString(object, path).constructor.toString();
-                res = /function ([a-zA-Z0-9]+)\(\)/.exec(tmpResFirefox)[1];
-            } else if(res===undefined){
-                tmpResSafari = ioObjectByString(object, path).constructor.toString();
-                res =  /\[object ([a-zA-Z0-9]+)\]/.exec(tmpResSafari)[1].replace(/constructor/ig, '');
+            // > browserhack for Firefox && Safari
+            if(res===''||res===undefined){
+                res = this._browserHack(res, object, path);
             }
 
             // > nur für setter methoden
-            if(!/String|Number/.exec(res)){
-                type = res;
-            }
+            if(!/String|Number/.exec(res)){ type = res; }
+
             return type;
         },
         _trigger : function(object, hasMethodCall, baseClass, callParts, args){
@@ -156,6 +151,24 @@ var ObjectObserve = (function(undefined, window){
 
             return result;
 
+        },
+        _browserHack : function(res, object, path){
+            var tmpRes   = '',
+                isFF     = !!window.sidebar,
+                isSafari = !!navigator.userAgent.match(/safari/i) &&
+                    !navigator.userAgent.match(/chrome/i) &&
+                    typeof document.body.style.webkitFilter !== "undefined"
+                    && !window.chrome;
+
+            if(res==='' && isFF){
+                tmpRes = ioObjectByString(object, path).constructor.toString();
+                res = /function ([a-zA-Z0-9]+)\(\)/.exec(tmpRes)[1];
+            } else if(res===undefined && isSafari){
+                tmpRes = ioObjectByString(object, path).constructor.toString();
+                res =  /\[object ([a-zA-Z0-9]+)\]/.exec(tmpRes)[1].replace(/constructor/ig, '');
+            }
+
+            return res;
         }
     };
 
