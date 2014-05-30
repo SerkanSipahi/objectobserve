@@ -16,8 +16,8 @@
     * Internet-Explorer +9
 
 ##### High Performance
-    * ~ 0.90 ms per object execution
-    * the performance is very near to Object.observe - ES6
+    * ~ 0.85 ms per object execution
+    * the performance is very close to Object.observe - ES6
 
 ````js
 jQuery.noConflict();
