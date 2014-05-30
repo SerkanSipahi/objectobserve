@@ -6,7 +6,7 @@
     * Attributes --works
     * our lib can much more than Object.observe (es6), it can observe domNodes,
       third party libraries, e.g jQuery, Zepto
-    * whatever you want :)
+    * whatever you want, on read or write operation :)
 
 ##### Works well with:
     * Chrome

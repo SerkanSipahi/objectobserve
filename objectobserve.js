@@ -18,7 +18,7 @@ var ObjectObserve = (function(undefined, window){
             if (typeof callback !== 'function') { throw new TypeError(); }
 
             for (var item in t){
-                if(t.hasOwnProperty(item)){ continue; }
+                if(!t.hasOwnProperty(item)){ continue; }
                 callback.call(t[item], item, t[item]);
             }
 
@@ -65,7 +65,7 @@ var ObjectObserve = (function(undefined, window){
         },
         io : function(object){
 
-            var path         = Object.keys(object)[0],
+            var path         = is('object', object) ? Object.keys(object)[0] : object,
                 args         = object[path],
                 callParts    = splitByLastIndexOf(path, '.'),
                 hasMethodCall = this._hasMethodCall(
@@ -99,7 +99,7 @@ var ObjectObserve = (function(undefined, window){
             var type     = 'Function',
                 res      = object instanceof HTMLElement ? ioObjectByString(object, path).constructor.name : 'Object';
 
-            // > browserhack for Firefox && Safari
+            // > browserhack for Firefox && Safari because ...constructor.name return empty string !
             if(res===''||res===undefined){
                 res = this._browserHack(res, object, path);
             }
@@ -153,6 +153,7 @@ var ObjectObserve = (function(undefined, window){
 
         },
         _browserHack : function(res, object, path){
+
             var tmpRes   = '',
                 isFF     = !!window.sidebar,
                 isSafari = !!navigator.userAgent.match(/safari/i) &&

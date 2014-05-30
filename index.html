@@ -97,7 +97,16 @@
             $observedDomNode_2.io({'style.color' : 'green'});
             $observedDomNode_2.io({'style.fontWeight' : 'bold'});
 
+            var bgColor    = $observedDomNode_2.io('style.backgroundColor');
+            var color      = $observedDomNode_2.io('style.color');
+            var fontWeight = $observedDomNode_2.io('style.fontWeight');
+
+            console.log('bgColor', bgColor);
+            console.log('color', color);
+            console.log('fontWeight', fontWeight);
+
             $observedjQueryObj.io({'css' : ['font-weight', 'bold']});
+            $observedjQueryObj.io({'css' : 'font-weight'});
             $observedjQueryObj.io({'html' : 'html over <strong>jQuery</strong>'});
             $observedjQueryObj.io({'append' : '<span>append over jQuery</span>'});
 
@@ -108,10 +117,6 @@
             console.log($observedDomNode_2);
             console.log($observedjQueryObj);
             console.log($nativeObject);
-
-            // > Getter not working -- in progress :)
-            //$observedFoo.io('style.backgroundColor');
-            //$observedFoo.io('innerHTML');
 
         };
 
