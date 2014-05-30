@@ -105,7 +105,7 @@ var ObjectObserve = (function(undefined, window){
                 res = /function ([a-zA-Z0-9]+)\(\)/.exec(tmpResFirefox)[1];
             } else if(res===undefined){
                 tmpResSafari = ioObjectByString(object, path).constructor.toString();
-                res =  /\[object ([a-zA-Z0-9]+)\]/.exec(tmpResSafari)[1];
+                res =  /\[object ([a-zA-Z0-9]+)\]/.exec(tmpResSafari)[1].replace(/constructor/ig, '');
             }
 
             // > nur für setter methoden
