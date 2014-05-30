@@ -54,13 +54,18 @@ $observedDomNode.on({
 });
 
 // > register callbacks domNode_2
+// > register callbacks domNode_2 separated is possible
 $observedDomNode_2.on({
     'style.backgroundColor' : function(changes){
         console.log('onStyleBackgroundColor', changes, this);
-    },
+    }
+});
+$observedDomNode_2.on({
     'style.color' : function(changes){
         console.log('onStyleColor', changes, this);
-    },
+    }
+});
+$observedDomNode_2.on({
     'style.fontWeight' : function(changes){
         console.log('onStyleFontWeight', changes, this);
     }
@@ -115,6 +120,7 @@ console.log($nativeObject);
 // > Getter not working -- in progress :)
 //$observedFoo.io('style.backgroundColor');
 //$observedFoo.io('innerHTML');
+
 
 ````
 
