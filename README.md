@@ -22,7 +22,7 @@
 #### Usage
 ##### init Observer
 ````js
-var oObject = new ObjectObserve(@observedObject, [, @function globalcallback]);
+var observedObject = new ObjectObserve(@observedObject, [, @function globalcallback]);
 ````
 
 ````js
