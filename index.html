@@ -21,8 +21,8 @@
                 };
 
             var $observedDomNode  = new ObjectObserve($('.domNode-class')[0], function(changes){
-
-            }); // > constructor callback is optional
+                // > constructor callback is optional
+            });
             var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]);
             var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));
             var $nativeObject       = new ObjectObserve(nativeObject);
