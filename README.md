@@ -22,7 +22,7 @@
 #### Usage
 ##### init Observer
 ````js
-var observedObject = new ObjectObserve(@observedObject, [, @function globalcallback]);
+var observedObjectInstance = new ObjectObserve(@observedObject, [, @function globalcallback]);
 ````
 
 ````js
@@ -42,9 +42,9 @@ var $ = document.querySelectorAll.bind(document),
 var $observedDomNode  = new ObjectObserve($('.domNode-class')[0], function(changes){
     // > constructor callback is optional
 });
-var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]);
-var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));
-var $nativeObject       = new ObjectObserve(nativeObject);
+var $observedDomNode_2  = new ObjectObserve($('.domNode_2-class')[0]); // > with nativ domNode
+var $observedjQueryObj  = new ObjectObserve(jQuery('.jquery-class'));  // > with jQuery object
+var $nativeObject       = new ObjectObserve(nativeObject);             // > with custom object
 
 // > register callbacks domNode
 $observedDomNode.on({
@@ -105,7 +105,8 @@ $nativeObject.on({
    }
 });
 
-// > Setter
+// > write or read in observed object ! Each io operation triggered a registered callback :)
+
 $observedDomNode.io({'setAttribute' : ['data-foo', 1234]});
 $observedDomNode.io({'innerHTML' : 'im innerHTML'});
 $observedDomNode.io({'appendChild' : document.createElement('span')});
