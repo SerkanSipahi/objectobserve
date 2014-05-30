@@ -1,9 +1,11 @@
 #### ObjectObserve.js / Beta / ECMAscript 5 / Observe whatever you want
     * Objects --works
     * domNodes, native domMethods --works
-    * Third Party Librariess e.g jQuery, Zepto, etc --works
+    * Third Party --works
     * Methods --works
     * Attributes --works
+    * our lib can much more than Object.observe (es6), it can observe domNodes,
+      third party libraries, e.g jQuery, Zepto
     * whatever you want :)
 
 ##### Works well with:
@@ -12,6 +14,10 @@
     * Safari
     * Opera
     * Internet-Explorer +9
+
+##### High Performance
+    * ~ 0.90 ms per object execution
+    * the performance is very near to Object.observe - ES6
 
 ````js
 jQuery.noConflict();

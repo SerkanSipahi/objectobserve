@@ -18,7 +18,7 @@ var ObjectObserve = (function(undefined, window){
             if (typeof callback !== 'function') { throw new TypeError(); }
 
             for (var item in t){
-                if(!t.hasOwnProperty(item)){ continue; }
+                if(t.hasOwnProperty(item)){ continue; }
                 callback.call(t[item], item, t[item]);
             }
 

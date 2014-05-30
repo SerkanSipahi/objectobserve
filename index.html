@@ -20,6 +20,7 @@
                     d : null
                 };
 
+            var t0 = performance.now();
             var $observedDomNode  = new ObjectObserve($('.domNode-class')[0], function(changes){
                 // > constructor callback is optional
             });
@@ -103,6 +104,9 @@
 
             $nativeObject.io({'a.b' : '"a.b" will write in "a.b.c"'});
             $nativeObject.io({'d' : 'Hello World in "d"'});
+
+            var t1 = performance.now();
+            console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
 
             console.log($observedDomNode);
             console.log($observedDomNode_2);
