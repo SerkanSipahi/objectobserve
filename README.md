@@ -117,8 +117,8 @@ console.log($observedjQueryObj);
 console.log($nativeObject);
 
 // > Getter not working -- in progress :)
-//$observedFoo.io('style.backgroundColor');
-//$observedFoo.io('innerHTML');
+//var foo = $observedFoo.io('style.backgroundColor');
+//var boo = $observedFoo.io('innerHTML');
 
 
 ````
