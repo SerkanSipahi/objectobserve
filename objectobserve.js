@@ -1,4 +1,3 @@
-//======= domObserve ==========
 
 var ObjectObserve = (function(undefined, window){
 
