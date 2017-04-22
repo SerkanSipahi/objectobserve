@@ -1,24 +1,23 @@
 #### ObjectObserve.js / Beta / ECMAscript 5 / Observe whatever you want
-    * Objects --works
-    * domNodes, native domMethods --works
-    * Third Party --works
-    * Methods --works
-    * Attributes --works
-    * functions --comming soon
-    * our lib can much more than Object.observe (es6), it can observe domNodes,
-      third party libraries, e.g jQuery, Zepto
-    * whatever you want, on read or write operation :)
+* Objects --works
+* domNodes, native domMethods --works
+* Third Party --works
+* Methods --works
+* Attributes --works
+* functions --comming soon
+* our lib can much more than Object.observe (es6), it can observe domNodes, third party libraries, e.g jQuery, Zepto
+* whatever you want, on read or write operation :)
 
 ##### Works well with:
-    * Chrome
-    * Firefox
-    * Safari
-    * Opera
-    * Internet-Explorer +9
+* Chrome
+* Firefox
+* Safari
+* Opera
+* Internet-Explorer +9
 
 ##### High Performance
-    * ~ 0.85 ms per object execution
-    * the performance is very close to Object.observe - ES6
+* ~ 0.85 ms per object execution
+* the performance is very close to Object.observe - ES6
 
 #### Usage
 ##### init Observer
